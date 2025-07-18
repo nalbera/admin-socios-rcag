@@ -38,5 +38,4 @@ authRouter.get('/look', async (req, res) => {
 
 authRouter.post('/login', loginUserController);
 
-
 export default authRouter;

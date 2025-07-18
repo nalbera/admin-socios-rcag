@@ -4,6 +4,13 @@ import Socios from "../database/models/Socios.js";
 
 import socios from './socios.json' with { type: "json" };
 
+import {
+    createSocioController,
+    listAllSociosController,
+    updateSocioController,
+    getSocioController
+} from '../controllers/socios/index.js';
+
 const sociosRouter = Router();
 
 
@@ -37,5 +44,12 @@ sociosRouter.get('/seeder', async (req, res, next) => {
     }
 });
 
+sociosRouter.post('/new', createSocioController);
+
+sociosRouter.get('/all', listAllSociosController);
+
+sociosRouter.get('/:nro_socio', getSocioController);
+
+sociosRouter.put('/update/:nro_socio', updateSocioController);
 
 export default sociosRouter;
