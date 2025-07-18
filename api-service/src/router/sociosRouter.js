@@ -17,7 +17,6 @@ sociosRouter.get('/seeder', async (req, res, next) => {
         
         for (let socio of socios) {
             let newSocio = {
-                // id: uuidv4(),
                 nro_socio: socio.nro_socio,
                 apellido: socio.apellido,
                 nombres: socio.nombres,
@@ -34,7 +33,7 @@ sociosRouter.get('/seeder', async (req, res, next) => {
         res.send('Socios creados');
 
     } catch (error) {
-        console.log(error);
+       next(error);
     }
 });
 

@@ -1,6 +1,8 @@
 import AuthUsers from "../../database/models/AuthUsers.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import generateErrors from '../../errors/generateErrors.js';
+
 
 const loginUserController = async (req, res, next) => {
     try {
@@ -8,25 +10,15 @@ const loginUserController = async (req, res, next) => {
         const { userName, password } = req.body;
 
         if (!userName || !password) {
-            res.send({
-                message: 'Faltan datos'
-            })
+            throw generateErrors('Email y password son requeridos', 400);
         };
 
         const currentUser = await AuthUsers.findOne({where: {userName: userName}});
+        
+        const passwordDecrypt = currentUser ? await bcrypt.compare(password, currentUser.password) : false;
 
-        if (!currentUser) {
-            res.send({
-                message: 'Usuario o contraseña incorrecta'
-            })
-        }
-
-        const passwordDecrypt = await bcrypt.compare(password, currentUser.password);
-
-        if (!passwordDecrypt) {
-            res.send({
-                message: 'Usuario o contraseña incorrecta'
-            })
+        if (!currentUser || !passwordDecrypt) {
+            throw generateErrors('Usuario o contraseña no coinciden', 401);
         }
 
         const payload = {
@@ -43,7 +35,7 @@ const loginUserController = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
 
